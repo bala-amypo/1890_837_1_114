@@ -1,36 +1,49 @@
-package com.example.demo.serviceImpl;
+package com.example.demo.service.impl;
 
-import com.example.demo.model.QueuePosition;
-import com.example.demo.model.Token;
+import com.example.demo.entity.BreachAlert;
+import com.example.demo.entity.QueuePosition;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.QueuePositionRepository;
+import com.example.demo.repository.TokenRepository;
 import com.example.demo.service.QueueService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class QueueServiceImpl implements QueueService {
 
     private final QueuePositionRepository queueRepo;
+    private final TokenRepository tokenRepo;
 
-    public QueueServiceImpl(QueuePositionRepository queueRepo) {
+    public QueueServiceImpl(QueuePositionRepository queueRepo, TokenRepository tokenRepo) {
         this.queueRepo = queueRepo;
+        this.tokenRepo = tokenRepo;
     }
 
     @Override
-    public QueuePosition assignPosition(Token token) {
+    public QueuePosition updateQueuePosition(Long tokenId, Integer newPosition) {
 
-        QueuePosition queue = new QueuePosition();
-        queue.setToken(token);
-        queue.setPosition(1);
-        queue.setUpdatedAt(LocalDateTime.now());
+        if(newPosition < 1){
+            throw new IllegalArgumentException("Position must be >= 1");
+        }
 
-        return queueRepo.save(queue);
+        BreachAlert token = tokenRepo.findById(tokenId)
+                .orElseThrow(() -> new ResourceNotFoundException("Token not found"));
+
+        QueuePosition qp = queueRepo.findByTokenId(tokenId)
+                .orElse(new QueuePosition());
+
+        qp.setToken(token);
+        qp.setPosition(newPosition);
+        qp.setUpdatedAt(LocalDateTime.now());
+
+        return queueRepo.save(qp);
     }
 
     @Override
-    public List<QueuePosition> getQueue() {
-        return queueRepo.findAll();
+    public QueuePosition getPosition(Long tokenId) {
+        return queueRepo.findByTokenId(tokenId)
+                .orElseThrow(() -> new ResourceNotFoundException("Queue position not found"));
     }
 }
