@@ -17,7 +17,8 @@ public class TokenController {
     }
 
     @PostMapping("/issue/{counterId}")
-    public Token issue(@PathVariable Long counterId) {
-        return service.issueToken(counterId);
-    }
+    public Token issueToken(Long counterId) {
+    return generateToken(counterId);
+}
+
 }
