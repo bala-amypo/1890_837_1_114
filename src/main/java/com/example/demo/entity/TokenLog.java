@@ -20,4 +20,13 @@ public class TokenLog {
     public void onCreate() {
         loggedAt = LocalDateTime.now();
     }
+
+    public void setToken(Token token) {
+    this.token = token;
+}
+
+public void setLogMessage(String logMessage) {
+    this.logMessage = logMessage;
+}
+
 }

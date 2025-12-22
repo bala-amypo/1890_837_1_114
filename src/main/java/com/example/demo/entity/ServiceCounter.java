@@ -13,5 +13,10 @@ public class ServiceCounter {
     private String department;
     private Boolean isActive = true;
 
+    public Boolean getIsActive() {
+    return isActive;
+}
+
+
     // getters & setters
 }

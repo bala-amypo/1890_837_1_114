@@ -21,5 +21,22 @@ public class Token {
     private LocalDateTime issuedAt;
     private LocalDateTime completedAt;
 
+    public void setTokenNumber(String tokenNumber) {
+    this.tokenNumber = tokenNumber;
+}
+
+public void setServiceCounter(ServiceCounter serviceCounter) {
+    this.serviceCounter = serviceCounter;
+}
+
+public void setStatus(String status) {
+    this.status = status;
+}
+
+public void setIssuedAt(LocalDateTime issuedAt) {
+    this.issuedAt = issuedAt;
+}
+
+
     // getters & setters
 }

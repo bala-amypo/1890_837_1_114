@@ -15,5 +15,14 @@ public class User {
     private String password;
     private String role = "STAFF";
 
+    public String getEmail() {
+    return email;
+}
+
+public String getPassword() {
+    return password;
+}
+
+
     // getters & setters
 }
