@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.QueuePosition;
-import com.example.demo.model.Token;
+import com.example.demo.entity.Token;
+import com.example.demo.entity.QueuePosition;
+
 import com.example.demo.service.QueueService;
 import com.example.demo.service.TokenService;
 import org.springframework.web.bind.annotation.*;

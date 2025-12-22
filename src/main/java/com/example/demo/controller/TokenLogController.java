@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.TokenLog;
+import com.example.demo.entity.TokenLog;
 import com.example.demo.repository.TokenLogRepository;
 import org.springframework.web.bind.annotation.*;
 
