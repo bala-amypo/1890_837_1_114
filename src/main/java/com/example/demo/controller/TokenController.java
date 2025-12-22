@@ -1,33 +1,23 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Token;
+import com.example.demo.entity.Token;
 import com.example.demo.service.TokenService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/token")
+@RequestMapping("/tokens")
+@Tag(name = "Tokens")
 public class TokenController {
 
-    private final TokenService tokenService;
+    private final TokenService service;
 
-    public TokenController(TokenService tokenService) {
-        this.tokenService = tokenService;
+    public TokenController(TokenService service) {
+        this.service = service;
     }
 
-    @PostMapping("/create/{counterId}")
-    public Token createToken(@PathVariable Long counterId){
-        return tokenService.createToken(counterId);
-    }
-
-    @PutMapping("/{tokenId}/status/{status}")
-    public Token updateStatus(@PathVariable Long tokenId, @PathVariable Token.Status status){
-        return tokenService.updateStatus(tokenId, status);
-    }
-
-    @GetMapping
-    public List<Token> getAllTokens(){
-        return tokenService.getAllTokens();
+    @PostMapping("/issue/{counterId}")
+    public Token issue(@PathVariable Long counterId) {
+        return service.issueToken(counterId);
     }
 }
