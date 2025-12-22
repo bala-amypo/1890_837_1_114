@@ -37,6 +37,9 @@ public void setIssuedAt(LocalDateTime issuedAt) {
     this.issuedAt = issuedAt;
 }
 
+public Long getId() {
+    return id;
+}
 
 
 
