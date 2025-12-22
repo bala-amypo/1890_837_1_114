@@ -1,10 +1,9 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "token_log")
 public class TokenLog {
 
     @Id
@@ -15,13 +14,10 @@ public class TokenLog {
     private Token token;
 
     private String logMessage;
-
     private LocalDateTime loggedAt;
 
     @PrePersist
-    public void setTime() {
-        this.loggedAt = LocalDateTime.now();
+    public void onCreate() {
+        loggedAt = LocalDateTime.now();
     }
-
-    // getters & setters
 }

@@ -1,10 +1,9 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "queue_position")
 public class QueuePosition {
 
     @Id
@@ -16,6 +15,4 @@ public class QueuePosition {
 
     private Integer position;
     private LocalDateTime updatedAt;
-
-    // getters & setters
 }
