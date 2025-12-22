@@ -2,12 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Token;
 import com.example.demo.service.TokenService;
-import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tokens")
-@Tag(name = "Tokens")
 public class TokenController {
 
     private final TokenService service;
@@ -17,8 +16,9 @@ public class TokenController {
     }
 
     @PostMapping("/issue/{counterId}")
-    public Token issueToken(Long counterId) {
-    return generateToken(counterId);
-}
+    public Token issueToken(@PathVariable Long counterId) {
 
+        
+        return service.generateToken(counterId);
+    }
 }
