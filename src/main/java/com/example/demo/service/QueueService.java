@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.model.QueuePosition;
-import com.example.demo.model.Token;
+import com.example.demo.entity.QueuePosition;
+import com.example.demo.entity.Token;
 
 import java.util.List;
 
