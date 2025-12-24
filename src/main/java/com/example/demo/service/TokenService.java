@@ -1,7 +1,12 @@
-package com.example.demo.service.impl;
+package com.example.demo.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
+import com.example.demo.entity.Token;
 
-@Service
-public class TokenServiceImpl {
+public interface TokenService {
+
+    Token generateToken(Long counterId);
+
+    // STEP 5 — declaration
+    List<Token> getAllTokens();
 }
