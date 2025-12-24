@@ -1,7 +1,7 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
-import com.example.demo.entity.Token;
+import org.springframework.stereotype.Service;
 
-public interface TokenLogService {
-    void log(Token token, String message);
+@Service
+public class TokenLogServiceImpl {
 }
