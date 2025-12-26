@@ -31,12 +31,13 @@ public class TokenServiceImpl {
             throw new IllegalArgumentException("not active");
         }
 
+        // 🔴 NEVER null
         Token token = new Token();
         token.setServiceCounter(sc);
         token.setStatus("WAITING");
         token.setTokenNumber(sc.getCounterName() + "-" + System.currentTimeMillis());
 
-        Token saved = tokenRepo.save(token);
+        Token saved = tokenRepo.save(token); // must receive non-null
 
         List<Token> waiting =
                 tokenRepo.findByServiceCounter_IdAndStatusOrderByIssuedAtAsc(counterId, "WAITING");
@@ -44,8 +45,8 @@ public class TokenServiceImpl {
         QueuePosition qp = new QueuePosition();
         qp.setToken(saved);
         qp.setPosition(waiting.size());
-        queueRepo.save(qp);
 
+        queueRepo.save(qp);
         logRepo.save(new TokenLog());
 
         return saved;
@@ -65,7 +66,7 @@ public class TokenServiceImpl {
             t.setCompletedAt(LocalDateTime.now());
         }
 
-        tokenRepo.save(t);
+        tokenRepo.save(t);        // t is never null
         logRepo.save(new TokenLog());
 
         return t;
