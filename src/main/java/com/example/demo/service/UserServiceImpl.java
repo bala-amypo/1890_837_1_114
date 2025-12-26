@@ -1,8 +1,26 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
-public class UserServiceImpl implements UserService {
-    @Override
-    public String getUser() {
-        return "USER";
+import com.example.demo.entity.User;
+import com.example.demo.repository.UserRepository;
+import java.util.Base64;
+
+public class UserServiceImpl {
+
+    private final UserRepository repo;
+
+    public UserServiceImpl(UserRepository repo) {
+        this.repo = repo;
+    }
+
+    public User register(User user) {
+        if (repo.findByEmail(user.getEmail()).isPresent())
+            throw new IllegalArgumentException("Email already exists");
+
+        user.setPassword(Base64.getEncoder().encodeToString(user.getPassword().getBytes()));
+        return repo.save(user);
+    }
+
+    public User findByEmail(String email) {
+        return repo.findByEmail(email).orElseThrow();
     }
 }
