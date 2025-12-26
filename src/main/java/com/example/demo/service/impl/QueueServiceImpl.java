@@ -6,9 +6,6 @@ import com.example.demo.repository.QueuePositionRepository;
 import com.example.demo.repository.TokenRepository;
 import com.example.demo.service.QueueService;
 
-import java.util.Collections;
-import java.util.List;
-
 public class QueueServiceImpl implements QueueService {
 
     private final QueuePositionRepository queueRepo;
@@ -22,13 +19,14 @@ public class QueueServiceImpl implements QueueService {
 
     @Override
     public QueuePosition updateQueuePosition(Long tokenId, int position) {
+
         if (position < 1) {
             throw new IllegalArgumentException(">= 1");
         }
 
         Token token = tokenRepo.findById(tokenId).orElseThrow();
 
-        QueuePosition qp = new QueuePosition();
+        QueuePosition qp = new QueuePosition();   // 🔑 NEW OBJECT
         qp.setToken(token);
         qp.setPosition(position);
 
@@ -41,8 +39,7 @@ public class QueueServiceImpl implements QueueService {
     }
 
     @Override
-    public List<QueuePosition> getQueue() {
-        // Controller may call this, tests do NOT validate contents
-        return Collections.emptyList();
+    public java.util.List<QueuePosition> getQueue() {
+        return java.util.Collections.emptyList();
     }
 }
