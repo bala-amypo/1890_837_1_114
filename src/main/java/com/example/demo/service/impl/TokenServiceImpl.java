@@ -24,6 +24,7 @@ public class TokenServiceImpl {
     }
 
     public Token issueToken(Long counterId) {
+
         ServiceCounter sc = counterRepo.findById(counterId)
                 .orElseThrow(() -> new RuntimeException("not found"));
 
@@ -31,57 +32,46 @@ public class TokenServiceImpl {
             throw new IllegalArgumentException("not active");
         }
 
-        // ✅ NEVER NULL
-        Token token = new Token();
+        Token token = new Token();        // 🔑 NEW OBJECT
         token.setServiceCounter(sc);
         token.setStatus("WAITING");
         token.setTokenNumber(sc.getCounterName() + "-" + System.currentTimeMillis());
 
         Token saved = tokenRepo.save(token);
-        if (saved == null) {
-            saved = token; // defensive fallback
-        }
 
         List<Token> waiting =
                 tokenRepo.findByServiceCounter_IdAndStatusOrderByIssuedAtAsc(counterId, "WAITING");
 
-        QueuePosition qp = new QueuePosition();
+        QueuePosition qp = new QueuePosition();   // 🔑 NEW OBJECT
         qp.setToken(saved);
         qp.setPosition(waiting.size());
 
-        QueuePosition qpSaved = queueRepo.save(qp);
-        if (qpSaved == null) {
-            qpSaved = qp;
-        }
-
-        TokenLog log = new TokenLog();
-        logRepo.save(log);
+        queueRepo.save(qp);
+        logRepo.save(new TokenLog());
 
         return saved;
     }
 
     public Token updateStatus(Long tokenId, String status) {
-        Token t = tokenRepo.findById(tokenId)
+
+        Token current = tokenRepo.findById(tokenId)
                 .orElseThrow(() -> new RuntimeException("not found"));
 
-        if (t.getStatus().equals("WAITING") && status.equals("COMPLETED")) {
+        if ("WAITING".equals(current.getStatus()) && "COMPLETED".equals(status)) {
             throw new IllegalArgumentException("Invalid status");
         }
 
-        t.setStatus(status);
+        Token token = current;   // reuse, NOT null
+        token.setStatus(status);
 
-        if (status.equals("COMPLETED") || status.equals("CANCELLED")) {
-            t.setCompletedAt(LocalDateTime.now());
+        if ("COMPLETED".equals(status) || "CANCELLED".equals(status)) {
+            token.setCompletedAt(LocalDateTime.now());
         }
 
-        Token saved = tokenRepo.save(t);
-        if (saved == null) {
-            saved = t;
-        }
-
+        tokenRepo.save(token);
         logRepo.save(new TokenLog());
 
-        return saved;
+        return token;
     }
 
     public Token getToken(Long id) {
