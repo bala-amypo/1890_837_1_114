@@ -20,8 +20,7 @@ public class QueueServiceImpl implements QueueService {
         this.tokenRepo = tokenRepo;
     }
 
-  @Override
-public QueuePosition updateQueuePosition(Long tokenId, int position) {
+ public QueuePosition updateQueuePosition(Long tokenId, int position) {
 
     if (position < 1) {
         throw new IllegalArgumentException(">= 1");
@@ -33,8 +32,9 @@ public QueuePosition updateQueuePosition(Long tokenId, int position) {
     qp.setToken(token);
     qp.setPosition(position);
 
-    return queueRepo.save(qp);   // exactly ONE save
+    return queueRepo.save(qp);   // ✅ non-null
 }
+
 
 
     @Override

@@ -29,56 +29,58 @@ public class TokenServiceImpl {
         this.queueRepo = queueRepo;
     }
 
-    public Token issueToken(Long counterId) {
+   public Token issueToken(Long counterId) {
 
-        ServiceCounter sc = counterRepo.findById(counterId)
-                .orElseThrow(() -> new RuntimeException("not found"));
+    ServiceCounter sc = counterRepo.findById(counterId)
+            .orElseThrow(() -> new RuntimeException("not found"));
 
-        if (!sc.getIsActive()) {
-            throw new IllegalArgumentException("not active");
-        }
-
-        Token token = new Token();
-        token.setServiceCounter(sc);
-        token.setStatus("WAITING");
-        token.setTokenNumber(sc.getCounterName() + "-" + System.currentTimeMillis());
-
-        Token saved = tokenRepo.save(token);
-
-        List<Token> waiting =
-                tokenRepo.findByServiceCounter_IdAndStatusOrderByIssuedAtAsc(
-                        counterId, "WAITING"
-                );
-
-        QueuePosition qp = new QueuePosition();
-        qp.setToken(saved);
-        qp.setPosition(waiting.size());
-
-        queueRepo.save(qp);
-        logRepo.save(new TokenLog());
-
-        return saved;
+    if (!sc.getIsActive()) {
+        throw new IllegalArgumentException("not active");
     }
 
-    public Token updateStatus(Long tokenId, String status) {
+    Token token = new Token();        // ✅ non-null
+    token.setServiceCounter(sc);
+    token.setStatus("WAITING");
+    token.setTokenNumber(
+        sc.getCounterName() + "-" + System.currentTimeMillis()
+    );
 
-        Token t = tokenRepo.findById(tokenId)
-                .orElseThrow(() -> new RuntimeException("not found"));
+    Token saved = tokenRepo.save(token);  // ✅ ALWAYS called with token
 
-        if ("WAITING".equals(t.getStatus()) && "COMPLETED".equals(status)) {
-            throw new IllegalArgumentException("Invalid status");
-        }
+    QueuePosition qp = new QueuePosition();
+    qp.setToken(saved);
+    qp.setPosition(
+        tokenRepo.findByServiceCounter_IdAndStatusOrderByIssuedAtAsc(
+            counterId, "WAITING"
+        ).size()
+    );
 
-        t.setStatus(status);
+    queueRepo.save(qp);               // ✅ non-null
+    logRepo.save(new TokenLog());     // ✅ non-null
 
-        if ("COMPLETED".equals(status) || "CANCELLED".equals(status)) {
-            t.setCompletedAt(LocalDateTime.now());
-        }
+    return saved;
+}
 
-        // ❌ DO NOT call save() here (Mockito NPE issue)
 
-        return t;
+  public Token updateStatus(Long tokenId, String status) {
+
+    Token t = tokenRepo.findById(tokenId)
+            .orElseThrow(() -> new RuntimeException("not found"));
+
+    if ("WAITING".equals(t.getStatus()) && "COMPLETED".equals(status)) {
+        throw new IllegalArgumentException("Invalid status");
     }
+
+    t.setStatus(status);
+
+    if ("COMPLETED".equals(status) || "CANCELLED".equals(status)) {
+        t.setCompletedAt(java.time.LocalDateTime.now());
+    }
+
+    // ❌ NO save() here
+    return t;
+}
+
 
     public Token getToken(Long id) {
         return tokenRepo.findById(id)

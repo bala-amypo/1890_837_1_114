@@ -20,14 +20,16 @@ public class TokenLogServiceImpl {
         this.tokenRepo = tokenRepo;
     }
 
-    public TokenLog addLog(Long tokenId, String msg) {
-        Token token = tokenRepo.findById(tokenId).orElseThrow();
+public TokenLog addLog(Long tokenId, String msg) {
 
-        TokenLog log = new TokenLog();
-        log.setToken(token);
+    Token token = tokenRepo.findById(tokenId).orElseThrow();
 
-        return logRepo.save(log);   // ✅ non-null
-    }
+    TokenLog log = new TokenLog();
+    log.setToken(token);
+
+    return logRepo.save(log);    // ✅ non-null
+}
+
 
     public List<TokenLog> getLogs(Long tokenId) {
         return logRepo.findByToken_IdOrderByLoggedAtAsc(tokenId);
