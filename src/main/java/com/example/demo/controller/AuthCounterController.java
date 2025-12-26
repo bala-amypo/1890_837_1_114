@@ -1,4 +1,4 @@
 package com.example.demo.controller;
 
-public class AuthCounterController {
+public class AuthController {
 }
