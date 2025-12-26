@@ -1,10 +1,10 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.ServiceCounter;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.*;
 
-import java.util.List;
-
-public interface ServiceCounterRepository extends JpaRepository<ServiceCounter, Long> {
+public interface ServiceCounterRepository {
+    ServiceCounter save(ServiceCounter sc);
+    Optional<ServiceCounter> findById(Long id);
     List<ServiceCounter> findByIsActiveTrue();
 }
