@@ -1,5 +1,3 @@
-
-
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Token;
@@ -20,16 +18,14 @@ public class TokenLogServiceImpl {
         this.tokenRepo = tokenRepo;
     }
 
-public TokenLog addLog(Long tokenId, String msg) {
+    public TokenLog addLog(Long tokenId, String msg) {
+        Token token = tokenRepo.findById(tokenId).orElseThrow();
 
-    Token token = tokenRepo.findById(tokenId).orElseThrow();
+        TokenLog log = new TokenLog();
+        log.setToken(token);
 
-    TokenLog log = new TokenLog();
-    log.setToken(token);
-
-    return logRepo.save(log);    // ✅ non-null
-}
-
+        return logRepo.save(log); // NEVER null
+    }
 
     public List<TokenLog> getLogs(Long tokenId) {
         return logRepo.findByToken_IdOrderByLoggedAtAsc(tokenId);

@@ -20,22 +20,20 @@ public class QueueServiceImpl implements QueueService {
         this.tokenRepo = tokenRepo;
     }
 
- public QueuePosition updateQueuePosition(Long tokenId, int position) {
+    @Override
+    public QueuePosition updateQueuePosition(Long tokenId, int position) {
+        if (position < 1) {
+            throw new IllegalArgumentException(">= 1");
+        }
 
-    if (position < 1) {
-        throw new IllegalArgumentException(">= 1");
+        Token token = tokenRepo.findById(tokenId).orElseThrow();
+
+        QueuePosition qp = new QueuePosition();
+        qp.setToken(token);
+        qp.setPosition(position);
+
+        return queueRepo.save(qp); // NEVER null
     }
-
-    Token token = tokenRepo.findById(tokenId).orElseThrow();
-
-    QueuePosition qp = new QueuePosition();
-    qp.setToken(token);
-    qp.setPosition(position);
-
-    return queueRepo.save(qp);   // ✅ non-null
-}
-
-
 
     @Override
     public QueuePosition getPosition(Long tokenId) {
