@@ -49,8 +49,9 @@ public class TokenServiceImpl {
     public Token updateStatus(Long id, String status) {
         Token t = tokenRepo.findById(id).orElseThrow(() -> new RuntimeException("not found"));
 
-        if (t.getStatus().equals("WAITING") && status.equals("COMPLETED"))
-            throw new IllegalArgumentException("Invalid status");
+       if (t.getStatus().equals("WAITING") && status.equals("COMPLETED")) {
+    throw new IllegalArgumentException("Invalid status");
+}
 
         t.setStatus(status);
         if (status.equals("COMPLETED") || status.equals("CANCELLED"))
