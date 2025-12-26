@@ -4,7 +4,8 @@ public class ServiceCounter {
     private Long id;
     private String counterName;
     private String department;
-    private Boolean isActive = true;
+    private Boolean isActive = true; // MUST be true by default
+
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -15,6 +16,8 @@ public class ServiceCounter {
     public String getDepartment() { return department; }
     public void setDepartment(String department) { this.department = department; }
 
-    public Boolean getIsActive() { return isActive; }
-    public void setIsActive(Boolean active) { isActive = active; }
+    public Boolean getIsActive() {
+    return isActive;
+}
+
 }

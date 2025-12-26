@@ -8,6 +8,7 @@ public class TokenLog {
     private String message;
     private LocalDateTime loggedAt = LocalDateTime.now();
 
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
