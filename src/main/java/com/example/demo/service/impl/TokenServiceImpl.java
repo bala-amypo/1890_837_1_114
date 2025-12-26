@@ -60,27 +60,24 @@ public class TokenServiceImpl {
         return saved;
     }
 
-   public Token updateStatus(Long tokenId, String status) {
+    public Token updateStatus(Long tokenId, String status) {
 
-    Token t = tokenRepo.findById(tokenId)
-            .orElseThrow(() -> new RuntimeException("not found"));
+        Token t = tokenRepo.findById(tokenId)
+                .orElseThrow(() -> new RuntimeException("not found"));
 
-    if ("WAITING".equals(t.getStatus()) && "COMPLETED".equals(status)) {
-        throw new IllegalArgumentException("Invalid status");
-    }
+        if ("WAITING".equals(t.getStatus()) && "COMPLETED".equals(status)) {
+            throw new IllegalArgumentException("Invalid status");
+        }
 
-    t.setStatus(status);
+        t.setStatus(status);
 
-    if ("COMPLETED".equals(status) || "CANCELLED".equals(status)) {
-        t.setCompletedAt(java.time.LocalDateTime.now());
-    }
+        if ("COMPLETED".equals(status) || "CANCELLED".equals(status)) {
+            t.setCompletedAt(LocalDateTime.now());
+        }
 
-    // ❌ DO NOT call tokenRepo.save(t)
-    // This avoids Mockito NPE
+        // ❌ DO NOT call save() here (Mockito NPE issue)
 
-    return t;
-}
-
+        return t;
     }
 
     public Token getToken(Long id) {
