@@ -9,6 +9,5 @@ public interface QueueService {
 
     QueuePosition getPosition(Long tokenId);
 
-    // ✅ ADD THIS
     List<QueuePosition> getQueue();
 }
