@@ -14,11 +14,12 @@ public class ServiceCounterServiceImpl implements ServiceCounterService {
         this.repo = repo;
     }
 
-   @Override
+ @Override
 public ServiceCounter addCounter(ServiceCounter sc) {
-    // MUST save the same instance
+    // sc is provided by test, never null
     return repo.save(sc);
 }
+
 
 
     @Override

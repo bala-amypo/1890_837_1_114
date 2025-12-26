@@ -13,19 +13,20 @@ public class UserServiceImpl {
         this.repo = repo;
     }
 
-   public User register(User user) {
-
+public User register(User user) {
     if (repo.findByEmail(user.getEmail()).isPresent()) {
         throw new IllegalArgumentException("Email already exists");
     }
 
     user.setPassword(
-            java.util.Base64.getEncoder()
-                    .encodeToString(user.getPassword().getBytes())
+        java.util.Base64.getEncoder()
+            .encodeToString(user.getPassword().getBytes())
     );
 
-    return repo.save(user);   // single save
+    // ✅ ALWAYS non-null
+    return repo.save(user);
 }
+
 
     public User findByEmail(String email) {
         return repo.findByEmail(email).orElseThrow();
