@@ -1,12 +1,15 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Token;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TokenServiceImpl implements TokenService {
 
     @Override
-    public String generateToken(Long userId) {
-        return "TOKEN_" + userId;
+    public Token generateToken(Long userId) {
+        Token token = new Token();
+        token.setTokenValue("TOKEN_" + userId);
+        return token;
     }
 }

@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Token;
+
 public interface TokenService {
-    String generateToken(Long userId);
+    Token generateToken(Long userId);
 }
