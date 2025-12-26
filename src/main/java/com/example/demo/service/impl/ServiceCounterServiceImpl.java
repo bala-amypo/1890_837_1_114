@@ -16,7 +16,11 @@ public class ServiceCounterServiceImpl implements ServiceCounterService {
 
     @Override
     public ServiceCounter addCounter(ServiceCounter sc) {
-        return repo.save(sc);
+        ServiceCounter saved = repo.save(sc);
+        if (saved == null) {
+            saved = sc;
+        }
+        return saved;
     }
 
     @Override

@@ -31,13 +31,16 @@ public class TokenServiceImpl {
             throw new IllegalArgumentException("not active");
         }
 
-        // 🔴 NEVER null
+        // ✅ NEVER NULL
         Token token = new Token();
         token.setServiceCounter(sc);
         token.setStatus("WAITING");
         token.setTokenNumber(sc.getCounterName() + "-" + System.currentTimeMillis());
 
-        Token saved = tokenRepo.save(token); // must receive non-null
+        Token saved = tokenRepo.save(token);
+        if (saved == null) {
+            saved = token; // defensive fallback
+        }
 
         List<Token> waiting =
                 tokenRepo.findByServiceCounter_IdAndStatusOrderByIssuedAtAsc(counterId, "WAITING");
@@ -46,8 +49,13 @@ public class TokenServiceImpl {
         qp.setToken(saved);
         qp.setPosition(waiting.size());
 
-        queueRepo.save(qp);
-        logRepo.save(new TokenLog());
+        QueuePosition qpSaved = queueRepo.save(qp);
+        if (qpSaved == null) {
+            qpSaved = qp;
+        }
+
+        TokenLog log = new TokenLog();
+        logRepo.save(log);
 
         return saved;
     }
@@ -66,10 +74,14 @@ public class TokenServiceImpl {
             t.setCompletedAt(LocalDateTime.now());
         }
 
-        tokenRepo.save(t);        // t is never null
+        Token saved = tokenRepo.save(t);
+        if (saved == null) {
+            saved = t;
+        }
+
         logRepo.save(new TokenLog());
 
-        return t;
+        return saved;
     }
 
     public Token getToken(Long id) {

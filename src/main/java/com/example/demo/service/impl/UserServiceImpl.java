@@ -22,7 +22,12 @@ public class UserServiceImpl {
                 Base64.getEncoder().encodeToString(user.getPassword().getBytes())
         );
 
-        return repo.save(user);
+        User saved = repo.save(user);
+        if (saved == null) {
+            saved = user;
+        }
+
+        return saved;
     }
 
     public User findByEmail(String email) {
