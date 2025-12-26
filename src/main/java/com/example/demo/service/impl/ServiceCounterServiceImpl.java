@@ -15,14 +15,8 @@ public class ServiceCounterServiceImpl implements ServiceCounterService {
     }
 
     @Override
-    public ServiceCounter addCounter(ServiceCounter input) {
-
-        ServiceCounter sc = new ServiceCounter();   // 🔑 NEW OBJECT
-        sc.setCounterName(input.getCounterName());
-        sc.setDepartment(input.getDepartment());
-        sc.setIsActive(input.getIsActive());
-
-        return repo.save(sc);                       // NEVER null
+    public ServiceCounter addCounter(ServiceCounter sc) {
+        return repo.save(sc);   // ✅ SAME INSTANCE (required by verify)
     }
 
     @Override

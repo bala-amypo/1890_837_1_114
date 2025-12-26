@@ -24,7 +24,6 @@ public class TokenServiceImpl {
     }
 
     public Token issueToken(Long counterId) {
-
         ServiceCounter sc = counterRepo.findById(counterId)
                 .orElseThrow(() -> new RuntimeException("not found"));
 
@@ -32,17 +31,17 @@ public class TokenServiceImpl {
             throw new IllegalArgumentException("not active");
         }
 
-        Token token = new Token();        // 🔑 NEW OBJECT
+        Token token = new Token();
         token.setServiceCounter(sc);
         token.setStatus("WAITING");
         token.setTokenNumber(sc.getCounterName() + "-" + System.currentTimeMillis());
 
-        Token saved = tokenRepo.save(token);
+        Token saved = tokenRepo.save(token); // ✅ non-null
 
         List<Token> waiting =
                 tokenRepo.findByServiceCounter_IdAndStatusOrderByIssuedAtAsc(counterId, "WAITING");
 
-        QueuePosition qp = new QueuePosition();   // 🔑 NEW OBJECT
+        QueuePosition qp = new QueuePosition();
         qp.setToken(saved);
         qp.setPosition(waiting.size());
 
@@ -53,29 +52,15 @@ public class TokenServiceImpl {
     }
 
     public Token updateStatus(Long tokenId, String status) {
-
-        Token current = tokenRepo.findById(tokenId)
+        Token t = tokenRepo.findById(tokenId)
                 .orElseThrow(() -> new RuntimeException("not found"));
 
-        if ("WAITING".equals(current.getStatus()) && "COMPLETED".equals(status)) {
+        if ("WAITING".equals(t.getStatus()) && "COMPLETED".equals(status)) {
             throw new IllegalArgumentException("Invalid status");
         }
 
-        Token token = current;   // reuse, NOT null
-        token.setStatus(status);
+        t.setStatus(status);
 
         if ("COMPLETED".equals(status) || "CANCELLED".equals(status)) {
-            token.setCompletedAt(LocalDateTime.now());
+            t.setCompletedAt(LocalDateTime.now());
         }
-
-        tokenRepo.save(token);
-        logRepo.save(new TokenLog());
-
-        return token;
-    }
-
-    public Token getToken(Long id) {
-        return tokenRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("not found"));
-    }
-}
