@@ -7,6 +7,7 @@ import com.example.demo.repository.TokenRepository;
 
 import java.util.List;
 
+@Service
 public class TokenLogServiceImpl {
 
     private final TokenLogRepository logRepo;
@@ -27,7 +28,8 @@ public class TokenLogServiceImpl {
         log.setToken(token);
         log.setMessage(message);
 
-        return logRepo.save(log);
+        logRepo.save(log);
+        return log;   // IMPORTANT
     }
 
     public List<TokenLog> getLogs(Long tokenId) {

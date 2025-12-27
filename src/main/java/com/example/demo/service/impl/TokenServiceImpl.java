@@ -51,7 +51,8 @@ public class TokenServiceImpl implements TokenService {
         token.setStatus("WAITING");
         token.setIssuedAt(LocalDateTime.now());
 
-        return tokenRepo.save(token);
+        tokenRepo.save(token);
+        return token;   // IMPORTANT
     }
 
     @Override
@@ -60,7 +61,9 @@ public class TokenServiceImpl implements TokenService {
         Token token = tokenRepo.findById(tokenId)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
 
-        if ("WAITING".equals(token.getStatus()) && "COMPLETED".equals(status)) {
+        String current = token.getStatus();
+
+        if ("WAITING".equals(current) && "COMPLETED".equals(status)) {
             throw new IllegalStateException("invalid");
         }
 
@@ -70,7 +73,8 @@ public class TokenServiceImpl implements TokenService {
             token.setCompletedAt(LocalDateTime.now());
         }
 
-        return tokenRepo.save(token);
+        tokenRepo.save(token);
+        return token;   // IMPORTANT
     }
 
     @Override

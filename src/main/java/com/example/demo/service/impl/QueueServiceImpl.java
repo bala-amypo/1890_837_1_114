@@ -8,6 +8,7 @@ import com.example.demo.service.QueueService;
 
 import java.util.List;
 
+@Service
 public class QueueServiceImpl implements QueueService {
 
     private final QueuePositionRepository queueRepo;
@@ -35,7 +36,8 @@ public class QueueServiceImpl implements QueueService {
         qp.setToken(token);
         qp.setPosition(position);
 
-        return queueRepo.save(qp);
+        queueRepo.save(qp);
+        return qp;   // IMPORTANT
     }
 
     @Override

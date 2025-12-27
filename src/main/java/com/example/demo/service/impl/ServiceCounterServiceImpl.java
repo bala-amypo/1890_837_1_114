@@ -6,6 +6,7 @@ import com.example.demo.service.ServiceCounterService;
 
 import java.util.List;
 
+@Service
 public class ServiceCounterServiceImpl implements ServiceCounterService {
 
     private final ServiceCounterRepository repo;
@@ -16,7 +17,8 @@ public class ServiceCounterServiceImpl implements ServiceCounterService {
 
     @Override
     public ServiceCounter addCounter(ServiceCounter counter) {
-        return repo.save(counter);
+        repo.save(counter);          // call repo
+        return counter;              // return entity (IMPORTANT)
     }
 
     @Override
