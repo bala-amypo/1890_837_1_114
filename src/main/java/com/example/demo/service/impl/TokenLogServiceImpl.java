@@ -5,6 +5,7 @@ import com.example.demo.entity.TokenLog;
 import com.example.demo.repository.TokenLogRepository;
 import com.example.demo.repository.TokenRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class TokenLogServiceImpl {
@@ -20,15 +21,16 @@ public class TokenLogServiceImpl {
 
     public TokenLog addLog(Long tokenId, String message) {
 
-    Token token = tokenRepo.findById(tokenId)
-            .orElseThrow(() -> new IllegalArgumentException());
+        Token token = tokenRepo.findById(tokenId)
+                .orElseThrow(() -> new IllegalArgumentException("Token not found"));
 
-    TokenLog log = new TokenLog();
-    log.setToken(token);
+        TokenLog log = new TokenLog();
+        log.setToken(token);
+        log.setMessage(message);
+        log.setLoggedAt(LocalDateTime.now());
 
-    return logRepo.save(log);   // REQUIRED by t24
-}
-
+        return logRepo.save(log);
+    }
 
     public List<TokenLog> getLogs(Long tokenId) {
         return logRepo.findByToken_IdOrderByLoggedAtAsc(tokenId);
