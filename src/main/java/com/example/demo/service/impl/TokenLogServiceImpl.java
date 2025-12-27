@@ -5,7 +5,6 @@ import com.example.demo.entity.TokenLog;
 import com.example.demo.repository.TokenLogRepository;
 import com.example.demo.repository.TokenRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class TokenLogServiceImpl {
@@ -22,12 +21,13 @@ public class TokenLogServiceImpl {
     public TokenLog addLog(Long tokenId, String message) {
 
         Token token = tokenRepo.findById(tokenId)
-                .orElseThrow(() -> new IllegalArgumentException("Token not found"));
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
 
         TokenLog log = new TokenLog();
         log.setToken(token);
-        log.setMessage(message);
-        log.setLoggedAt(LocalDateTime.now());
+        log.setMessage(message);   // ✅ setter exists
+
+        // ❌ DO NOT set loggedAt (auto-initialized in entity)
 
         return logRepo.save(log);
     }
