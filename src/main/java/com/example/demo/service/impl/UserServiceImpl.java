@@ -5,7 +5,6 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -22,10 +21,10 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("duplicate");
         }
 
+        // REQUIRED BY TESTS
         user.setPassword(Integer.toHexString(user.getPassword().hashCode()));
 
-        repo.save(user);
-        return user;   // IMPORTANT
+        return repo.save(user);   // ✅ MUST return save()
     }
 
     @Override

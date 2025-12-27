@@ -7,7 +7,6 @@ import com.example.demo.repository.TokenRepository;
 import com.example.demo.service.QueueService;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
 
 @Service
@@ -38,8 +37,7 @@ public class QueueServiceImpl implements QueueService {
         qp.setToken(token);
         qp.setPosition(position);
 
-        queueRepo.save(qp);
-        return qp;   // IMPORTANT
+        return queueRepo.save(qp);   // ✅ MUST return save()
     }
 
     @Override

@@ -6,7 +6,6 @@ import com.example.demo.repository.TokenLogRepository;
 import com.example.demo.repository.TokenRepository;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
 
 @Service
@@ -30,8 +29,7 @@ public class TokenLogServiceImpl {
         log.setToken(token);
         log.setMessage(message);
 
-        logRepo.save(log);
-        return log;   // IMPORTANT
+        return logRepo.save(log);   // ✅ REQUIRED
     }
 
     public List<TokenLog> getLogs(Long tokenId) {

@@ -5,7 +5,6 @@ import com.example.demo.repository.ServiceCounterRepository;
 import com.example.demo.service.ServiceCounterService;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
 
 @Service
@@ -19,8 +18,7 @@ public class ServiceCounterServiceImpl implements ServiceCounterService {
 
     @Override
     public ServiceCounter addCounter(ServiceCounter counter) {
-        repo.save(counter);          // call repo
-        return counter;              // return entity (IMPORTANT)
+        return repo.save(counter);   // ✅ REQUIRED
     }
 
     @Override

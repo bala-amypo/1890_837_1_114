@@ -31,18 +31,12 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Token getToken(Long id) {
-        return tokenRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found"));
-    }
-
-    @Override
     public Token issueToken(Long counterId) {
 
         ServiceCounter counter = counterRepo.findById(counterId)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
 
-        if (!Boolean.TRUE.equals(counter.getIsActive())) {
+        if (Boolean.FALSE.equals(counter.getIsActive())) {
             throw new IllegalStateException("inactive");
         }
 
@@ -51,8 +45,7 @@ public class TokenServiceImpl implements TokenService {
         token.setStatus("WAITING");
         token.setIssuedAt(LocalDateTime.now());
 
-        tokenRepo.save(token);
-        return token;   // IMPORTANT
+        return tokenRepo.save(token);   // ✅ CRITICAL
     }
 
     @Override
@@ -63,6 +56,7 @@ public class TokenServiceImpl implements TokenService {
 
         String current = token.getStatus();
 
+        // REQUIRED INVALID TRANSITION
         if ("WAITING".equals(current) && "COMPLETED".equals(status)) {
             throw new IllegalStateException("invalid");
         }
@@ -73,8 +67,13 @@ public class TokenServiceImpl implements TokenService {
             token.setCompletedAt(LocalDateTime.now());
         }
 
-        tokenRepo.save(token);
-        return token;   // IMPORTANT
+        return tokenRepo.save(token);   // ✅ REQUIRED
+    }
+
+    @Override
+    public Token getToken(Long id) {
+        return tokenRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
     }
 
     @Override
