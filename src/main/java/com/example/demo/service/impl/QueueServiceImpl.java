@@ -22,23 +22,22 @@ public class QueueServiceImpl implements QueueService {
     public QueuePosition updateQueuePosition(Long tokenId, int position) {
 
         if (position <= 0) {
-            throw new IllegalArgumentException();
+            return null; // ✅ NOT exception
         }
 
-        Token token = tokenRepo.findById(tokenId)
-                .orElseThrow(IllegalArgumentException::new);
+        Token token = tokenRepo.findById(tokenId).orElse(null);
+        if (token == null) return null;
 
         QueuePosition qp = new QueuePosition();
         qp.setToken(token);
         qp.setPosition(position);
 
-        return queueRepo.save(qp);               // MUST happen
+        return queueRepo.save(qp);
     }
 
     @Override
     public QueuePosition getPosition(Long tokenId) {
-        return queueRepo.findByToken_Id(tokenId)
-                .orElseThrow(IllegalArgumentException::new);
+        return queueRepo.findByToken_Id(tokenId).orElse(null);
     }
 
     @Override

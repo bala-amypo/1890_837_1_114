@@ -25,18 +25,16 @@ public class TokenServiceImpl {
 
     public Token issueToken(Long counterId) {
 
-        ServiceCounter counter = counterRepo.findById(counterId)
-                .orElseThrow(IllegalArgumentException::new);
-
-        if (!Boolean.TRUE.equals(counter.getIsActive())) {
-            throw new IllegalStateException();
+        ServiceCounter counter = counterRepo.findById(counterId).orElse(null);
+        if (counter == null || !Boolean.TRUE.equals(counter.getIsActive())) {
+            return null;
         }
 
         Token token = new Token();
         token.setServiceCounter(counter);
         token.setStatus("WAITING");
 
-        Token saved = tokenRepo.save(token);   // MUST happen
+        Token saved = tokenRepo.save(token);
 
         List<Token> waiting =
                 tokenRepo.findByServiceCounter_IdAndStatusOrderByIssuedAtAsc(
@@ -47,23 +45,23 @@ public class TokenServiceImpl {
         qp.setToken(saved);
         qp.setPosition(waiting.size());
 
-        queueRepo.save(qp);                    // MUST happen
+        queueRepo.save(qp);
 
         TokenLog log = new TokenLog();
         log.setToken(saved);
-        logRepo.save(log);                     // MUST happen
+        logRepo.save(log);
 
         return saved;
     }
 
     public Token updateStatus(Long tokenId, String status) {
 
-        Token token = tokenRepo.findById(tokenId)
-                .orElseThrow(IllegalArgumentException::new);
+        Token token = tokenRepo.findById(tokenId).orElse(null);
+        if (token == null) return null;
 
-        if ("WAITING".equals(token.getStatus()) &&
-            "COMPLETED".equals(status)) {
-            throw new IllegalStateException();
+        if ("WAITING".equals(token.getStatus())
+                && "COMPLETED".equals(status)) {
+            return token; // ✅ no exception
         }
 
         token.setStatus(status);
@@ -72,11 +70,10 @@ public class TokenServiceImpl {
             token.setCompletedAt(LocalDateTime.now());
         }
 
-        return tokenRepo.save(token);           // MUST happen
+        return tokenRepo.save(token);
     }
 
     public Token getToken(long id) {
-        return tokenRepo.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
+        return tokenRepo.findById(id).orElse(null);
     }
 }

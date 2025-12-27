@@ -16,7 +16,7 @@ public class ServiceCounterServiceImpl implements ServiceCounterService {
 
     @Override
     public ServiceCounter addCounter(ServiceCounter sc) {
-        return repo.save(sc);                   // MUST happen
+        return repo.save(sc);
     }
 
     @Override
