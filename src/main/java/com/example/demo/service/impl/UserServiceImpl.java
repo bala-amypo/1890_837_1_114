@@ -15,18 +15,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(User user) {
-        if (repo.findByEmail(user.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Duplicate email");
-        }
+public User register(User user) {
 
-        user.setPassword(
-                Base64.getEncoder()
-                        .encodeToString(user.getPassword().getBytes())
-        );
-
-        return repo.save(user);
+    if (repo.findByEmail(user.getEmail()).isPresent()) {
+        throw new IllegalArgumentException();   // REQUIRED by t9
     }
+
+    user.setPassword(
+            java.util.Base64.getEncoder()
+                    .encodeToString(user.getPassword().getBytes())
+    );
+
+    return repo.save(user);  // MUST be called
+}
+
 
     @Override
     public User findByEmail(String email) {

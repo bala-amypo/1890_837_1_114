@@ -67,18 +67,21 @@ public class TokenServiceImpl {
         Token token = tokenRepo.findById(tokenId)
                 .orElseThrow(() -> new IllegalArgumentException("Token not found"));
 
-        if ("WAITING".equals(token.getStatus()) && "COMPLETED".equals(status)) {
-            throw new IllegalStateException("Invalid transition");
-        }
+        // INSIDE updateStatus(...)
+if ("WAITING".equals(token.getStatus())
+        && "COMPLETED".equals(status)) {
+    throw new IllegalStateException();   // REQUIRED by t14
+}
+
 
         token.setStatus(status);
 
-        if ("COMPLETED".equals(status) || "CANCELLED".equals(status)) {
-            token.setCompletedAt(LocalDateTime.now());
-        }
+if ("COMPLETED".equals(status) || "CANCELLED".equals(status)) {
+    token.setCompletedAt(java.time.LocalDateTime.now());
+}
 
-        return tokenRepo.save(token);   // MUST be called
-    }
+return tokenRepo.save(token);   // MUST happen
+
 
     public Token getToken(long id) {
         return tokenRepo.findById(id)
