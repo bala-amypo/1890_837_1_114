@@ -16,20 +16,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) {
+
         if (repo.findByEmail(user.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new IllegalArgumentException("Email exists");
         }
 
+        // MUST encode password BEFORE save
         user.setPassword(
                 Base64.getEncoder()
                         .encodeToString(user.getPassword().getBytes())
         );
 
+        // MUST save non-null user
         return repo.save(user);
     }
 
     @Override
     public User findByEmail(String email) {
-        return repo.findByEmail(email).orElse(null);
+        return repo.findByEmail(email).orElseThrow();
     }
 }
