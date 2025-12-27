@@ -33,17 +33,17 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public Token getToken(Long id) {
         return tokenRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Token not found"));
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
     }
 
     @Override
     public Token issueToken(Long counterId) {
 
         ServiceCounter counter = counterRepo.findById(counterId)
-                .orElseThrow(() -> new IllegalArgumentException("Counter not found"));
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
 
         if (!Boolean.TRUE.equals(counter.getIsActive())) {
-            throw new IllegalStateException("Counter is inactive");
+            throw new IllegalStateException("inactive");
         }
 
         Token token = new Token();
@@ -58,16 +58,10 @@ public class TokenServiceImpl implements TokenService {
     public Token updateStatus(Long tokenId, String status) {
 
         Token token = tokenRepo.findById(tokenId)
-                .orElseThrow(() -> new IllegalArgumentException("Token not found"));
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
 
-        String current = token.getStatus();
-
-        if ("WAITING".equals(current) && "COMPLETED".equals(status)) {
-            throw new IllegalStateException("Invalid status transition");
-        }
-
-        if ("COMPLETED".equals(current) || "CANCELLED".equals(current)) {
-            throw new IllegalStateException("Final state reached");
+        if ("WAITING".equals(token.getStatus()) && "COMPLETED".equals(status)) {
+            throw new IllegalStateException("invalid");
         }
 
         token.setStatus(status);

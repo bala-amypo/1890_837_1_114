@@ -17,5 +17,8 @@ public class TokenLog {
     public Token getToken() { return token; }
     public void setToken(Token token) { this.token = token; }
 
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
+
     public LocalDateTime getLoggedAt() { return loggedAt; }
 }

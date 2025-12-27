@@ -23,13 +23,15 @@ public class QueueServiceImpl implements QueueService {
     public QueuePosition updateQueuePosition(Long tokenId, int position) {
 
         if (position <= 0) {
-            throw new IllegalArgumentException("Invalid queue position");
+            throw new IllegalArgumentException("invalid");
         }
 
         Token token = tokenRepo.findById(tokenId)
-                .orElseThrow(() -> new IllegalArgumentException("Token not found"));
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
 
-        QueuePosition qp = new QueuePosition();
+        QueuePosition qp = queueRepo.findByToken_Id(tokenId)
+                .orElse(new QueuePosition());
+
         qp.setToken(token);
         qp.setPosition(position);
 
@@ -39,7 +41,7 @@ public class QueueServiceImpl implements QueueService {
     @Override
     public QueuePosition getPosition(Long tokenId) {
         return queueRepo.findByToken_Id(tokenId)
-                .orElseThrow(() -> new IllegalArgumentException("Position not found"));
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
     }
 
     @Override
