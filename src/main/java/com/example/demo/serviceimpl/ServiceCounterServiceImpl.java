@@ -14,15 +14,16 @@ public class ServiceCounterServiceImpl implements ServiceCounterService {
         this.repo = repo;
     }
 
-    @Override
-    public ServiceCounter addCounter(ServiceCounter sc) {
+@Override
+public ServiceCounter addCounter(ServiceCounter sc) {
 
-        if (sc == null) {
-            sc = new ServiceCounter(); // 🔑 REQUIRED
-        }
-
-        return repo.save(sc); // NEVER null
+    if (sc == null) {
+        sc = new ServiceCounter(); // 🔑 REQUIRED
     }
+
+    return repo.save(sc); // NEVER null
+}
+
 
     @Override
     public List<ServiceCounter> getActiveCounters() {
