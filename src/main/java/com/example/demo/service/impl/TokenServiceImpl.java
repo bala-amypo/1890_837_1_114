@@ -35,7 +35,6 @@ public class TokenServiceImpl implements TokenService {
         Token token = new Token();
         token.setServiceCounter(counter);
         token.setStatus("WAITING");
-        token.setIssuedAt(LocalDateTime.now());
 
         return tokenRepo.save(token);
     }
@@ -48,7 +47,6 @@ public class TokenServiceImpl implements TokenService {
 
         String current = token.getStatus();
 
-        // invalid transition
         if ("WAITING".equals(current) && "COMPLETED".equals(status)) {
             throw new IllegalStateException();
         }
