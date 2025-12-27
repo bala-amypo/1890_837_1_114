@@ -6,6 +6,9 @@ import java.util.Optional;
 
 public interface TokenService {
 
+    Token getToken(Long id);
+
+
     Token issueToken(Long counterId);
 
     Token updateStatus(Long tokenId, String status);
