@@ -1,4 +1,3 @@
-cat <<EOF > src/main/java/com/example/demo/service/impl/TokenLogServiceImpl.java
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Token;
@@ -35,4 +34,3 @@ public class TokenLogServiceImpl {
         return logRepo.findByToken_IdOrderByLoggedAtAsc(tokenId);
     }
 }
-EOF
