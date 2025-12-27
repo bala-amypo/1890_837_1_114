@@ -14,19 +14,18 @@ public class JwtTokenProvider {
     private final SecretKey key;
     private final long validityMs;
 
-    // ✅ REQUIRED BY TESTS
+    // REQUIRED BY TESTS
     public JwtTokenProvider(String secret, int validitySeconds) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.validityMs = validitySeconds * 1000L;
     }
 
-    // ✅ ALSO KEEP NO-ARG CONSTRUCTOR (used elsewhere)
+    // default constructor
     public JwtTokenProvider() {
-        this("default-test-secret-key-default-test-secret-key", 3600);
+        this("default-secret-key-default-secret-key", 3600);
     }
 
     public String generateToken(Long userId, String email, String role) {
-
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", email);
         claims.put("role", role);
