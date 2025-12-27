@@ -6,6 +6,9 @@ import com.example.demo.repository.ServiceCounterRepository;
 import com.example.demo.repository.TokenRepository;
 import com.example.demo.service.TokenService;
 import org.springframework.stereotype.Service;
+import com.example.demo.repository.TokenLogRepository;
+import com.example.demo.repository.QueuePositionRepository;
+
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -14,13 +17,26 @@ import java.util.Optional;
 public class TokenServiceImpl implements TokenService {
 
     private final TokenRepository tokenRepo;
-    private final ServiceCounterRepository counterRepo;
+private final ServiceCounterRepository counterRepo;
+private final TokenLogRepository logRepo;
+private final QueuePositionRepository queueRepo;
 
-    public TokenServiceImpl(TokenRepository tokenRepo,
-                            ServiceCounterRepository counterRepo) {
-        this.tokenRepo = tokenRepo;
-        this.counterRepo = counterRepo;
-    }
+public TokenServiceImpl(TokenRepository tokenRepo,
+                        ServiceCounterRepository counterRepo,
+                        TokenLogRepository logRepo,
+                        QueuePositionRepository queueRepo) {
+    this.tokenRepo = tokenRepo;
+    this.counterRepo = counterRepo;
+    this.logRepo = logRepo;
+    this.queueRepo = queueRepo;
+}
+
+@Override
+public Token getToken(Long id) {
+    return tokenRepo.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException());
+}
+
 
     @Override
     public Token issueToken(Long counterId) {
