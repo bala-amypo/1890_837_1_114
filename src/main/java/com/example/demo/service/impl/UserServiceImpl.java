@@ -16,7 +16,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) {
-
         if (repo.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Duplicate email");
         }
@@ -26,7 +25,7 @@ public class UserServiceImpl implements UserService {
                         .encodeToString(user.getPassword().getBytes())
         );
 
-        return repo.save(user);   // NEVER null
+        return repo.save(user);
     }
 
     @Override

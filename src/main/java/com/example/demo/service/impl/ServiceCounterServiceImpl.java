@@ -1,37 +1,26 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.User;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
+import com.example.demo.entity.ServiceCounter;
+import com.example.demo.repository.ServiceCounterRepository;
+import com.example.demo.service.ServiceCounterService;
 
-import java.util.Base64;
+import java.util.List;
 
-public class UserServiceImpl implements UserService {
+public class ServiceCounterServiceImpl implements ServiceCounterService {
 
-    private final UserRepository repo;
+    private final ServiceCounterRepository repo;
 
-    public UserServiceImpl(UserRepository repo) {
+    public ServiceCounterServiceImpl(ServiceCounterRepository repo) {
         this.repo = repo;
     }
 
     @Override
-    public User register(User user) {
-
-        if (repo.findByEmail(user.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Duplicate email");
-        }
-
-        user.setPassword(
-                Base64.getEncoder()
-                        .encodeToString(user.getPassword().getBytes())
-        );
-
-        return repo.save(user);   // NEVER null
+    public ServiceCounter addCounter(ServiceCounter counter) {
+        return repo.save(counter);
     }
 
     @Override
-    public User findByEmail(String email) {
-        return repo.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public List<ServiceCounter> getActiveCounters() {
+        return repo.findByIsActiveTrue();
     }
 }

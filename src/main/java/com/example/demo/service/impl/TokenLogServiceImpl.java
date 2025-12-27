@@ -1,50 +1,35 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.QueuePosition;
 import com.example.demo.entity.Token;
-import com.example.demo.repository.QueuePositionRepository;
+import com.example.demo.entity.TokenLog;
+import com.example.demo.repository.TokenLogRepository;
 import com.example.demo.repository.TokenRepository;
-import com.example.demo.service.QueueService;
 
-import java.util.Collections;
 import java.util.List;
 
-public class QueueServiceImpl implements QueueService {
+public class TokenLogServiceImpl {
 
-    private final QueuePositionRepository queueRepo;
+    private final TokenLogRepository logRepo;
     private final TokenRepository tokenRepo;
 
-    public QueueServiceImpl(QueuePositionRepository queueRepo,
-                            TokenRepository tokenRepo) {
-        this.queueRepo = queueRepo;
+    public TokenLogServiceImpl(TokenLogRepository logRepo,
+                               TokenRepository tokenRepo) {
+        this.logRepo = logRepo;
         this.tokenRepo = tokenRepo;
     }
 
-    @Override
-    public QueuePosition updateQueuePosition(Long tokenId, int position) {
-
-        if (position <= 0) {
-            throw new IllegalArgumentException("Invalid position");
-        }
+    public TokenLog addLog(Long tokenId, String message) {
 
         Token token = tokenRepo.findById(tokenId)
                 .orElseThrow(() -> new IllegalArgumentException("Token not found"));
 
-        QueuePosition qp = new QueuePosition();
-        qp.setToken(token);
-        qp.setPosition(position);
+        TokenLog log = new TokenLog();
+        log.setToken(token);
 
-        return queueRepo.save(qp);   // NEVER null
+        return logRepo.save(log);
     }
 
-    @Override
-    public QueuePosition getPosition(Long tokenId) {
-        return queueRepo.findByToken_Id(tokenId)
-                .orElseThrow(() -> new IllegalArgumentException("Position not found"));
-    }
-
-    @Override
-    public List<QueuePosition> getQueue() {
-        return Collections.emptyList();
+    public List<TokenLog> getLogs(Long tokenId) {
+        return logRepo.findByToken_IdOrderByLoggedAtAsc(tokenId);
     }
 }

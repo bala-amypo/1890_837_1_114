@@ -34,7 +34,7 @@ public class QueueServiceImpl implements QueueService {
         qp.setToken(token);
         qp.setPosition(position);
 
-        return queueRepo.save(qp);   // NEVER null
+        return queueRepo.save(qp);
     }
 
     @Override
