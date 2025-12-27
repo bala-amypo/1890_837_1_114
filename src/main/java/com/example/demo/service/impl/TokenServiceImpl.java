@@ -48,4 +48,8 @@ public class TokenServiceImpl {
         }
         return tokenRepo.save(t);
     }
+    public Token getToken(long id) {
+    return tokenRepo.findById(id).orElseThrow();
+}
+
 }

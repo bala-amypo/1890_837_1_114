@@ -5,14 +5,28 @@ import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JwtTokenProvider {
 
-    private final SecretKey key =
-            Keys.hmacShaKeyFor("this-is-a-very-secure-256-bit-secret-key".getBytes(StandardCharsets.UTF_8));
+    private final SecretKey key;
+    private final long validityMs;
+
+    // ✅ REQUIRED BY TESTS
+    public JwtTokenProvider(String secret, int validitySeconds) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.validityMs = validitySeconds * 1000L;
+    }
+
+    // ✅ ALSO KEEP NO-ARG CONSTRUCTOR (used elsewhere)
+    public JwtTokenProvider() {
+        this("default-test-secret-key-default-test-secret-key", 3600);
+    }
 
     public String generateToken(Long userId, String email, String role) {
+
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", email);
         claims.put("role", role);
@@ -21,14 +35,17 @@ public class JwtTokenProvider {
                 .setSubject(String.valueOf(userId))
                 .addClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .setExpiration(new Date(System.currentTimeMillis() + validityMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public Claims getClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build()
-                .parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public boolean validateToken(String token) {
