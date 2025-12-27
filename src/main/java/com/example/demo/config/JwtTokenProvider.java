@@ -9,14 +9,8 @@ import java.util.*;
 
 public class JwtTokenProvider {
 
-    private final SecretKey key;
-    private final long validity;
-
-    public JwtTokenProvider(String secret, long validity) {
-        // ensures >=256 bits
-        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        this.validity = validity;
-    }
+    private final SecretKey key =
+            Keys.hmacShaKeyFor("this-is-a-very-secure-256-bit-secret-key".getBytes(StandardCharsets.UTF_8));
 
     public String generateToken(Long userId, String email, String role) {
         Map<String, Object> claims = new HashMap<>();
@@ -24,26 +18,25 @@ public class JwtTokenProvider {
         claims.put("role", role);
 
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userId.toString())
+                .setSubject(String.valueOf(userId))
+                .addClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + validity))
+                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    public Claims getClaims(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build()
+                .parseClaimsJws(token).getBody();
+    }
+
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            getClaims(token);
             return true;
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public Claims getClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build()
-                .parseClaimsJws(token)
-                .getBody();
     }
 }
