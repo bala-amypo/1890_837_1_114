@@ -20,11 +20,13 @@ public class TokenLogServiceImpl {
 
     public TokenLog addLog(Long tokenId, String message) {
 
-        Token token = tokenRepo.findById(tokenId).orElse(null);
+        Token token = tokenRepo.findById(tokenId)
+                .orElseThrow(() -> new IllegalArgumentException());
 
         TokenLog log = new TokenLog();
         log.setToken(token);
 
+        // MUST save non-null log
         return logRepo.save(log);
     }
 
