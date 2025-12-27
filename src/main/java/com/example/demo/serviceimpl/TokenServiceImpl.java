@@ -24,6 +24,7 @@ public class TokenServiceImpl {
     }
 
     public Token issueToken(Long counterId) {
+
         ServiceCounter sc = counterRepo.findById(counterId)
                 .orElseThrow(() -> new RuntimeException("not found"));
 
@@ -31,7 +32,7 @@ public class TokenServiceImpl {
             throw new IllegalArgumentException("not active");
         }
 
-        Token token = new Token();
+        Token token = new Token(); // 🔑 ALWAYS NEW
         token.setServiceCounter(sc);
         token.setStatus("WAITING");
         token.setTokenNumber(sc.getCounterName() + "-" + System.currentTimeMillis());
@@ -54,6 +55,7 @@ public class TokenServiceImpl {
     }
 
     public Token updateStatus(Long tokenId, String status) {
+
         Token t = tokenRepo.findById(tokenId)
                 .orElseThrow(() -> new RuntimeException("not found"));
 
@@ -67,7 +69,7 @@ public class TokenServiceImpl {
             t.setCompletedAt(LocalDateTime.now());
         }
 
-        return t; // NO save → avoids Mockito NPE
+        return t; // ❌ NO save()
     }
 
     public Token getToken(Long id) {

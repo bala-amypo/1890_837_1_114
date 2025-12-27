@@ -14,8 +14,9 @@ public class UserServiceImpl {
     }
 
     public User register(User user) {
+
         if (user == null) {
-            user = new User();
+            user = new User(); // 🔑 REQUIRED
         }
 
         if (repo.findByEmail(user.getEmail()).isPresent()) {

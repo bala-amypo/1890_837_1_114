@@ -19,12 +19,13 @@ public class TokenLogServiceImpl {
     }
 
     public TokenLog addLog(Long tokenId, String msg) {
+
         Token token = tokenRepo.findById(tokenId).orElseThrow();
 
-        TokenLog log = new TokenLog();
+        TokenLog log = new TokenLog(); // 🔑 ALWAYS NEW
         log.setToken(token);
 
-        return logRepo.save(log); // NEVER null
+        return logRepo.save(log);
     }
 
     public List<TokenLog> getLogs(Long tokenId) {
