@@ -18,15 +18,15 @@ public class TokenLogServiceImpl {
         this.tokenRepo = tokenRepo;
     }
 
-    public TokenLog addLog(Long tokenId, String msg) {
+  public TokenLog addLog(Long tokenId, String msg) {
 
-        Token token = tokenRepo.findById(tokenId).orElseThrow();
+    Token token = tokenRepo.findById(tokenId).orElseThrow();
 
-        TokenLog log = new TokenLog(); // 🔑 ALWAYS NEW
-        log.setToken(token);
+    TokenLog log = new TokenLog(); // 🔑 ALWAYS CREATE
+    log.setToken(token);
 
-        return logRepo.save(log);
-    }
+    return logRepo.save(log); // NEVER null
+}
 
     public List<TokenLog> getLogs(Long tokenId) {
         return logRepo.findByToken_IdOrderByLoggedAtAsc(tokenId);
