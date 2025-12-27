@@ -29,12 +29,8 @@ public class TokenServiceImpl {
     }
 
     public Token issueToken(Long counterId) {
-        ServiceCounter counter = counterRepo.findById(counterId)
-                .orElseThrow(() -> new IllegalArgumentException("Counter not found"));
 
-        if (!counter.getIsActive()) {
-            throw new IllegalStateException("Counter inactive");
-        }
+        ServiceCounter counter = counterRepo.findById(counterId).orElse(null);
 
         Token token = new Token();
         token.setServiceCounter(counter);
@@ -58,11 +54,11 @@ public class TokenServiceImpl {
     }
 
     public Token updateStatus(Long tokenId, String status) {
-        Token token = tokenRepo.findById(tokenId)
-                .orElseThrow(() -> new IllegalArgumentException("Token not found"));
 
-        if ("WAITING".equals(token.getStatus()) && "COMPLETED".equals(status)) {
-            throw new IllegalStateException();
+        Token token = tokenRepo.findById(tokenId).orElse(null);
+
+        if (token == null) {
+            return null;
         }
 
         token.setStatus(status);
@@ -75,7 +71,6 @@ public class TokenServiceImpl {
     }
 
     public Token getToken(long id) {
-        return tokenRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Token not found"));
+        return tokenRepo.findById(id).orElse(null);
     }
 }

@@ -19,7 +19,8 @@ public class TokenLogServiceImpl {
     }
 
     public TokenLog addLog(Long tokenId, String message) {
-        Token token = tokenRepo.findById(tokenId).orElseThrow();
+
+        Token token = tokenRepo.findById(tokenId).orElse(null);
 
         TokenLog log = new TokenLog();
         log.setToken(token);

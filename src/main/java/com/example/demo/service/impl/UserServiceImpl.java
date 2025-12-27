@@ -21,7 +21,8 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setPassword(
-                Base64.getEncoder().encodeToString(user.getPassword().getBytes())
+                Base64.getEncoder()
+                        .encodeToString(user.getPassword().getBytes())
         );
 
         return repo.save(user);
@@ -29,6 +30,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByEmail(String email) {
-        return repo.findByEmail(email).orElseThrow();
+        return repo.findByEmail(email).orElse(null);
     }
 }
