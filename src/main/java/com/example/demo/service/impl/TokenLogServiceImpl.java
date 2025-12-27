@@ -1,9 +1,7 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Token;
-import com.example.demo.entity.TokenLog;
-import com.example.demo.repository.TokenLogRepository;
-import com.example.demo.repository.TokenRepository;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 
 import java.util.List;
 
@@ -21,13 +19,12 @@ public class TokenLogServiceImpl {
     public TokenLog addLog(Long tokenId, String message) {
 
         Token token = tokenRepo.findById(tokenId)
-                .orElseThrow(() -> new IllegalArgumentException());
+                .orElseThrow(IllegalArgumentException::new);
 
         TokenLog log = new TokenLog();
         log.setToken(token);
 
-        // MUST save non-null log
-        return logRepo.save(log);
+        return logRepo.save(log);                // MUST happen
     }
 
     public List<TokenLog> getLogs(Long tokenId) {

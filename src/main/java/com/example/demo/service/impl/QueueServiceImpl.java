@@ -1,9 +1,7 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.QueuePosition;
-import com.example.demo.entity.Token;
-import com.example.demo.repository.QueuePositionRepository;
-import com.example.demo.repository.TokenRepository;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 import com.example.demo.service.QueueService;
 
 import java.util.Collections;
@@ -23,25 +21,24 @@ public class QueueServiceImpl implements QueueService {
     @Override
     public QueuePosition updateQueuePosition(Long tokenId, int position) {
 
-        // Validation REQUIRED by tests
         if (position <= 0) {
             throw new IllegalArgumentException();
         }
 
         Token token = tokenRepo.findById(tokenId)
-                .orElseThrow(() -> new IllegalArgumentException());
+                .orElseThrow(IllegalArgumentException::new);
 
         QueuePosition qp = new QueuePosition();
         qp.setToken(token);
         qp.setPosition(position);
 
-        // MUST save non-null qp
-        return queueRepo.save(qp);
+        return queueRepo.save(qp);               // MUST happen
     }
 
     @Override
     public QueuePosition getPosition(Long tokenId) {
-        return queueRepo.findByToken_Id(tokenId).orElseThrow();
+        return queueRepo.findByToken_Id(tokenId)
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     @Override
