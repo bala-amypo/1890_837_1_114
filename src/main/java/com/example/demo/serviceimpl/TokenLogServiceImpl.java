@@ -1,9 +1,7 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Token;
-import com.example.demo.entity.TokenLog;
-import com.example.demo.repository.TokenLogRepository;
-import com.example.demo.repository.TokenRepository;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 
 import java.util.List;
 
@@ -12,21 +10,16 @@ public class TokenLogServiceImpl {
     private final TokenLogRepository logRepo;
     private final TokenRepository tokenRepo;
 
-    public TokenLogServiceImpl(TokenLogRepository logRepo,
-                               TokenRepository tokenRepo) {
-        this.logRepo = logRepo;
-        this.tokenRepo = tokenRepo;
+    public TokenLogServiceImpl(TokenLogRepository l, TokenRepository t) {
+        this.logRepo = l;
+        this.tokenRepo = t;
     }
 
-  public TokenLog addLog(Long tokenId, String msg) {
-
-    Token token = tokenRepo.findById(tokenId).orElseThrow();
-
-    TokenLog log = new TokenLog(); // 🔑 ALWAYS CREATE
-    log.setToken(token);
-
-    return logRepo.save(log); // NEVER null
-}
+    public TokenLog addLog(Long tokenId, String msg) {
+        TokenLog log = new TokenLog();
+        log.setToken(tokenRepo.findById(tokenId).orElseThrow());
+        return logRepo.save(log);
+    }
 
     public List<TokenLog> getLogs(Long tokenId) {
         return logRepo.findByToken_IdOrderByLoggedAtAsc(tokenId);
