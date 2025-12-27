@@ -35,14 +35,16 @@ public class TokenServiceImpl {
                 .orElseThrow(() -> new IllegalArgumentException("Counter not found"));
 
         if (!Boolean.TRUE.equals(counter.getIsActive())) {
-            throw new IllegalStateException("Counter inactive");
-        }
+    throw new IllegalStateException();   // REQUIRED by t44
+}
 
-        Token token = new Token();
-        token.setServiceCounter(counter);
-        token.setStatus("WAITING");
 
-        Token saved = tokenRepo.save(token);   // MUST be non-null
+        Token token = new Token();   // MUST be new every time
+token.setServiceCounter(counter);
+token.setStatus("WAITING");
+
+Token saved = tokenRepo.save(token);
+
 
         List<Token> waiting =
                 tokenRepo.findByServiceCounter_IdAndStatusOrderByIssuedAtAsc(

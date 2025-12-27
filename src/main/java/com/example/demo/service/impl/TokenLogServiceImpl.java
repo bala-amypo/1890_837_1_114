@@ -20,14 +20,15 @@ public class TokenLogServiceImpl {
 
     public TokenLog addLog(Long tokenId, String message) {
 
-        Token token = tokenRepo.findById(tokenId)
-                .orElseThrow(() -> new IllegalArgumentException("Token not found"));
+    Token token = tokenRepo.findById(tokenId)
+            .orElseThrow(() -> new IllegalArgumentException());
 
-        TokenLog log = new TokenLog();
-        log.setToken(token);
+    TokenLog log = new TokenLog();
+    log.setToken(token);
 
-        return logRepo.save(log);
-    }
+    return logRepo.save(log);   // REQUIRED by t24
+}
+
 
     public List<TokenLog> getLogs(Long tokenId) {
         return logRepo.findByToken_IdOrderByLoggedAtAsc(tokenId);

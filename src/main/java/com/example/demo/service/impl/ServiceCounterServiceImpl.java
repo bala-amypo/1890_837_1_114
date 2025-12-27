@@ -15,9 +15,10 @@ public class ServiceCounterServiceImpl implements ServiceCounterService {
     }
 
     @Override
-    public ServiceCounter addCounter(ServiceCounter counter) {
-        return repo.save(counter);
-    }
+public ServiceCounter addCounter(ServiceCounter counter) {
+    return repo.save(counter);   // REQUIRED by t21
+}
+
 
     @Override
     public List<ServiceCounter> getActiveCounters() {
