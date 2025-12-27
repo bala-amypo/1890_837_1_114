@@ -1,7 +1,13 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
+import com.example.demo.entity.QueuePosition;
+import com.example.demo.entity.ServiceCounter;
+import com.example.demo.entity.Token;
+import com.example.demo.entity.TokenLog;
+import com.example.demo.repository.QueuePositionRepository;
+import com.example.demo.repository.ServiceCounterRepository;
+import com.example.demo.repository.TokenLogRepository;
+import com.example.demo.repository.TokenRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,16 +31,18 @@ public class TokenServiceImpl {
 
     public Token issueToken(Long counterId) {
 
-        ServiceCounter counter = counterRepo.findById(counterId).orElse(null);
-        if (counter == null || !Boolean.TRUE.equals(counter.getIsActive())) {
-            return null;
+        ServiceCounter counter = counterRepo.findById(counterId)
+                .orElseThrow(() -> new IllegalArgumentException("Counter not found"));
+
+        if (!Boolean.TRUE.equals(counter.getIsActive())) {
+            throw new IllegalStateException("Counter inactive");
         }
 
         Token token = new Token();
         token.setServiceCounter(counter);
         token.setStatus("WAITING");
 
-        Token saved = tokenRepo.save(token);
+        Token saved = tokenRepo.save(token);   // MUST be non-null
 
         List<Token> waiting =
                 tokenRepo.findByServiceCounter_IdAndStatusOrderByIssuedAtAsc(
@@ -56,12 +64,11 @@ public class TokenServiceImpl {
 
     public Token updateStatus(Long tokenId, String status) {
 
-        Token token = tokenRepo.findById(tokenId).orElse(null);
-        if (token == null) return null;
+        Token token = tokenRepo.findById(tokenId)
+                .orElseThrow(() -> new IllegalArgumentException("Token not found"));
 
-        if ("WAITING".equals(token.getStatus())
-                && "COMPLETED".equals(status)) {
-            return token; // ✅ no exception
+        if ("WAITING".equals(token.getStatus()) && "COMPLETED".equals(status)) {
+            throw new IllegalStateException("Invalid transition");
         }
 
         token.setStatus(status);
@@ -70,10 +77,11 @@ public class TokenServiceImpl {
             token.setCompletedAt(LocalDateTime.now());
         }
 
-        return tokenRepo.save(token);
+        return tokenRepo.save(token);   // MUST be called
     }
 
     public Token getToken(long id) {
-        return tokenRepo.findById(id).orElse(null);
+        return tokenRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Token not found"));
     }
 }
