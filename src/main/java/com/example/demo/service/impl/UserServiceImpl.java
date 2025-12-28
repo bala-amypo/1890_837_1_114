@@ -7,29 +7,25 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final UserRepository userRepository;
 
-    private final UserRepository repo;
-
-    public UserServiceImpl(UserRepository repo) {
-        this.repo = repo;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public User register(User user) {
-
-        if (repo.findByEmail(user.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("duplicate");
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
         }
-
-        // REQUIRED BY TESTS
-        user.setPassword(Integer.toHexString(user.getPassword().hashCode()));
-
-        return repo.save(user);   // ✅ MUST return save()
+        // Simple password encoding (not secure, just for demo)
+        user.setPassword("encoded_" + user.getPassword());
+        return userRepository.save(user);
     }
 
     @Override
     public User findByEmail(String email) {
-        return repo.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("not found"));
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
